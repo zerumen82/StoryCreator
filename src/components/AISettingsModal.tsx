@@ -64,7 +64,7 @@ export default function AISettingsModal({ onClose }: { onClose: () => void }) {
     setSdLoading(true)
     setSdStatus(null)
     try {
-      const models = await listSdCheckpoints(local.sdEndpoint || 'http://127.0.0.1:8188')
+      const models = await listSdCheckpoints(local.sdEndpoint || 'http://127.0.0.1:8189')
       setSdModels(models)
       setSdStatus(models.length > 0 ? `ComfyUI conectado: ${models.length} modelos.` : 'Conectado pero sin checkpoints.')
     } catch (e) {

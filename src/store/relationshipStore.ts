@@ -88,6 +88,6 @@ export const useRelationshipStore = create<RelationshipStore>((set, get) => ({
   },
 
   hasRelationship: (id1, id2, type) => {
-    return get().relationships.some(r => r.characterId1 === id1 && r.characterId2 === id2 && r.type === type)
+    return get().relationships.some(r => (r.characterId1 === id1 && r.characterId2 === id2 || r.characterId1 === id2 && r.characterId2 === id1) && r.type === type)
   },
 }))

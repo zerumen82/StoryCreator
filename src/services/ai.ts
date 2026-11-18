@@ -59,13 +59,16 @@ export async function* streamChat(
   // caption ligero...), NO anteponer el system generico de escritor: con
   // modelos 7-8B dos systems contradictorios = ignora el rol y se lia.
   // Si ademas trae contexto de mundo, se fusiona DETRAS del system local.
+  // null (o cadena vacia) significa "sin system adicional".
   const hasSystem = messages.some((m) => m.role === 'system')
   const systemPrompt =
-    typeof customSystem === 'string'
-      ? customSystem + (context ? buildEntityBlock(context) : '')
-      : hasSystem
-        ? null
-        : buildSystemPrompt(context)
+    customSystem === null || (typeof customSystem === 'string' && !customSystem.trim())
+      ? null
+      : typeof customSystem === 'string'
+        ? customSystem.trim() + (context ? buildEntityBlock(context) : '')
+        : hasSystem
+          ? null
+          : buildSystemPrompt(context)
 
   // Evitar system duplicado: si los mensajes ya traen uno y vamos a
   // anteponer el nuestro, quitar el que traian.

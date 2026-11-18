@@ -84,7 +84,7 @@ export default function GroupsPanel() {
                     </div>
                     <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                       <button onClick={() => openEdit(group)} className="px-2 py-1 bg-gray-800 hover:bg-gray-700 rounded text-xs">Editar</button>
-                      <button onClick={() => deleteGroup(group.id)} className="px-2 py-1 bg-red-900/40 hover:bg-red-900/60 text-red-300 rounded text-xs">Borrar</button>
+                      <button onClick={() => { if (window.confirm('¿Borrar este grupo?')) deleteGroup(group.id) }} className="px-2 py-1 bg-red-900/40 hover:bg-red-900/60 text-red-300 rounded text-xs">Borrar</button>
                     </div>
                   </div>
                   <p className="text-sm text-gray-400 line-clamp-2">{group.description}</p>

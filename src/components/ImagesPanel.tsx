@@ -12,11 +12,23 @@ export default function ImagesPanel() {
     Array.from(files).forEach((file) => {
       const reader = new FileReader()
       reader.onload = () => {
-        addImage({
-          dataUrl: reader.result as string,
-          caption: '',
-          prompt: '',
-        })
+        const img = new Image()
+        img.onload = () => {
+          const maxDim = 1280
+          let { width, height } = img
+          if (width > maxDim || height > maxDim) {
+            const scale = maxDim / Math.max(width, height)
+            width = Math.round(width * scale)
+            height = Math.round(height * scale)
+          }
+          const canvas = document.createElement('canvas')
+          canvas.width = width
+          canvas.height = height
+          const ctx = canvas.getContext('2d')
+          if (ctx) ctx.drawImage(img, 0, 0, width, height)
+          addImage({ dataUrl: canvas.toDataURL('image/jpeg', 0.85), caption: '', prompt: '' })
+        }
+        img.src = reader.result as string
       }
       reader.readAsDataURL(file)
     })
@@ -72,7 +84,7 @@ export default function ImagesPanel() {
                   <p className="text-sm text-gray-300 bg-gray-950 p-2 rounded-lg border border-gray-800">{image.caption || 'Sin caption generado'}</p>
                 </div>
                 <button
-                  onClick={() => deleteImage(image.id)}
+                  onClick={() => { if (window.confirm('¿Borrar esta imagen?')) deleteImage(image.id) }}
                   className="px-3 py-1.5 bg-red-900/40 hover:bg-red-900/60 text-red-300 rounded-lg text-xs"
                 >
                   Borrar imagen

@@ -10,6 +10,8 @@
     "build": "tsc --noEmit && vite build",
     "build:renderer": "vite build",
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "electron:dev": "concurrently -k \"vite\" \"wait-on tcp:127.0.0.1:5173 && electron .\"",
     "electron:start": "electron .",
     "electron:build": "npm run build && electron-builder --win --x64 --publish never"
@@ -33,7 +35,6 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
-    "better-sqlite3": "^13.0.3",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "tailwindcss": "^4.3.3",
@@ -49,9 +50,11 @@
     "electron": "^44.3.0",
     "electron-builder": "^26.15.3",
     "electron-packager": "^17.1.2",
+    "jsdom": "^31.0.1",
     "sharp": "^0.35.4",
     "typescript": "~6.0.2",
     "vite": "^8.2.2",
+    "vitest": "^5.1.1",
     "wait-on": "^9.1.0"
   }
 }

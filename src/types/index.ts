@@ -74,6 +74,7 @@ export interface ChatMessage {
   role: 'user' | 'assistant' | 'system'
   content: string
   timestamp: number
+  feedback?: number
 }
 
 // RELACIONES ENTRE PERSONAJES - Parentesco
@@ -96,19 +97,6 @@ export type FamilySubtype =
 export type RelationshipType = 'parentesco' | 'afinidad'
 
 export type AffinitySubtype =
-  | 'amigo_primo'
-  | 'amigo_cercano'
-  | 'amor_rival'
-  | 'rival_amor'
-  | 'enemigo'
-  | 'competidor'
-  | 'aliado'
-  | 'mentor_alumno'
-  | 'alumno_mentor'
-  | 'compania_profesional'
-  | 'rival_competidor'
-  | 'guerra_civil'
-  | 'unidos_poder'
   | 'amigo_primo'
   | 'amigo_cercano'
   | 'amor_rival'

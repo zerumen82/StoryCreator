@@ -5,6 +5,7 @@ import { useLocationStore } from '../store/locationStore'
 import { useGroupStore } from '../store/groupStore'
 import { useImageStore } from '../store/imageStore'
 import { useMemoryStore } from '../store/memoryStore'
+import { useThemeStore } from '../store/themeStore'
 import { useAIConfigStore } from '../store/aiConfigStore'
 import { checkOllamaConnection, getModelsStatus, type ModelStatus } from '../services/ollamaModels'
 
@@ -43,6 +44,8 @@ export default function Sidebar({ currentView, onNavigate, onOpenSettings }: Sid
   const { images } = useImageStore()
   const { memories } = useMemoryStore()
   const { config } = useAIConfigStore()
+  const theme = useThemeStore((s) => s.theme)
+  const toggleTheme = useThemeStore((s) => s.toggle)
   const [ollamaStatus, setOllamaStatus] = useState<'checking' | 'connected' | 'disconnected' | 'not-ollama'>('not-ollama')
   const [modelsReady, setModelsReady] = useState<boolean | null>(null)
 
@@ -210,6 +213,13 @@ export default function Sidebar({ currentView, onNavigate, onOpenSettings }: Sid
             </span>
           </div>
         )}
+        <button
+          onClick={toggleTheme}
+          className="w-full text-left px-3 py-2.5 rounded-xl text-sm text-gray-400 hover:bg-gray-800 hover:text-gray-100 transition-colors mb-1"
+        >
+          <span className="mr-2">{theme === 'dark' ? '☀️' : '🌙'}</span>
+          {theme === 'dark' ? 'Modo claro' : 'Modo oscuro'}
+        </button>
         <button
           onClick={onOpenSettings}
           className="w-full text-left px-3 py-2.5 rounded-xl text-sm text-gray-400 hover:bg-gray-800 hover:text-gray-100 transition-colors"

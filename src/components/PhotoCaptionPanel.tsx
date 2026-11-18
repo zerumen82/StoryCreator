@@ -36,7 +36,25 @@ export default function PhotoCaptionPanel() {
     if (!files) return
     Array.from(files).forEach((file) => {
       const reader = new FileReader()
-      reader.onload = () => addImage({ dataUrl: reader.result as string, caption: '', prompt: '' })
+      reader.onload = () => {
+        const img = new Image()
+        img.onload = () => {
+          const maxDim = 1280
+          let { width, height } = img
+          if (width > maxDim || height > maxDim) {
+            const scale = maxDim / Math.max(width, height)
+            width = Math.round(width * scale)
+            height = Math.round(height * scale)
+          }
+          const canvas = document.createElement('canvas')
+          canvas.width = width
+          canvas.height = height
+          const ctx = canvas.getContext('2d')
+          if (ctx) ctx.drawImage(img, 0, 0, width, height)
+          addImage({ dataUrl: canvas.toDataURL('image/jpeg', 0.85), caption: '', prompt: '' })
+        }
+        img.src = reader.result as string
+      }
       reader.readAsDataURL(file)
     })
   }, [addImage])

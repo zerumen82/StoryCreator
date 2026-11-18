@@ -4,6 +4,7 @@ import { useRelationshipStore } from '../store/relationshipStore'
 import type { Character } from '../types'
 import EntityModal from './EntityModal'
 import RelationshipsModal from './RelationshipsModal'
+import { useToastStore } from '../store/toastStore'
 
 const emptyCharacter: Omit<Character, 'id' | 'createdAt' | 'updatedAt'> = {
   name: '',
@@ -43,6 +44,7 @@ export default function CharactersPanel() {
   const [newTrait, setNewTrait] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
   const [relCharacterId, setRelCharacterId] = useState<string | null>(null)
+  const [search, setSearch] = useState('')
 
   const openCreate = () => {
     setEditingId(null)
@@ -83,6 +85,7 @@ export default function CharactersPanel() {
       addCharacter(form)
     }
     setModalOpen(false)
+    useToastStore.getState().show(editingId ? 'Personaje actualizado' : 'Personaje creado', 'success')
   }
 
   const addTrait = () => {
@@ -130,8 +133,15 @@ export default function CharactersPanel() {
           </div>
         )}
 
+        <input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Buscar personaje por nombre..."
+          className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-sm focus:outline-none focus:border-indigo-500"
+        />
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {characters.map((char) => {
+          {characters.filter((c) => !search.trim() || c.name.toLowerCase().includes(search.trim().toLowerCase())).map((char) => {
             const isUser = isUserCharacter(char.id)
             return (
             <div key={char.id} className={`bg-gray-900 border rounded-xl overflow-hidden space-y-3 group ${isUser ? 'border-violet-500 ring-1 ring-violet-500/50' : 'border-gray-800'}`}>
@@ -154,7 +164,7 @@ export default function CharactersPanel() {
                   <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button onClick={() => openRelationships(char.id)} className="px-2 py-1 bg-violet-700 hover:bg-violet-600 rounded text-xs" title="Definir relaciones con otros personajes">🔗 Relaciones</button>
                     <button onClick={() => openEdit(char)} className="px-2 py-1 bg-gray-800 hover:bg-gray-700 rounded text-xs">Editar</button>
-                    {!isUser && <button onClick={() => deleteCharacter(char.id)} className="px-2 py-1 bg-red-900/40 hover:bg-red-900/60 text-red-300 rounded text-xs">Borrar</button>}
+                    {!isUser && <button onClick={() => { if (window.confirm('¿Borrar este personaje?')) deleteCharacter(char.id) }} className="px-2 py-1 bg-red-900/40 hover:bg-red-900/60 text-red-300 rounded text-xs">Borrar</button>}
                   </div>
                 </div>
                 {isUser ? (
@@ -189,6 +199,12 @@ export default function CharactersPanel() {
           })}
         </div>
 
+        {characters.length > 0 && characters.filter((c) => !search.trim() || c.name.toLowerCase().includes(search.trim().toLowerCase())).length === 0 && (
+          <div className="text-center py-20 text-gray-500">
+            <p className="text-4xl mb-4">🔍</p>
+            <p>Sin resultados para "{search}".</p>
+          </div>
+        )}
         {characters.length === 0 && (
           <div className="text-center py-20 text-gray-500">
             <p className="text-4xl mb-4">👤</p>

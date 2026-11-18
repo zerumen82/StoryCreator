@@ -2,6 +2,7 @@ const { contextBridge, ipcRenderer } = require('electron')
 
 contextBridge.exposeInMainWorld('electronAPI', {
   platform: process.platform,
+  version: () => ipcRenderer.invoke('app:version'),
   sd: {
     status: () => ipcRenderer.invoke('sd:status'),
     start: () => ipcRenderer.invoke('sd:start'),

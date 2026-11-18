@@ -22,10 +22,10 @@ export default function EntityModal({ title, open, onClose, onSubmit, children }
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-labelledby="modal-title">
       <div className="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl">
         <div className="px-6 py-4 border-b border-gray-800 flex items-center justify-between">
-          <h2 className="text-xl font-bold">{title}</h2>
+          <h2 id="modal-title" className="text-xl font-bold">{title}</h2>
           <button onClick={onClose} className="text-gray-400 hover:text-white text-2xl leading-none">×</button>
         </div>
         <div className="flex-1 overflow-y-auto p-6">{children}</div>

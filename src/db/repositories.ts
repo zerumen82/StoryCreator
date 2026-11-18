@@ -339,7 +339,7 @@ export function getMessagesByConversation(conversationId: string): ChatMessage[]
   return read<MessageRow[]>(K.messages, [])
     .filter(r => r.conversation_id === conversationId)
     .sort((a, b) => a.timestamp - b.timestamp)
-    .map(row => ({ id: row.id, role: row.role as ChatMessage['role'], content: row.content, timestamp: row.timestamp }))
+    .map(row => ({ id: row.id, role: row.role as ChatMessage['role'], content: row.content, timestamp: row.timestamp, feedback: row.feedback }))
 }
 
 export function addMessage(conversationId: string, role: string, content: string): string {

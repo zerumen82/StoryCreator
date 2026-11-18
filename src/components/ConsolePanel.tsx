@@ -394,7 +394,13 @@ export default function ConsolePanel() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
+                if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                  e.preventDefault()
+                  handleSend()
+                } else if (e.key === 'Escape' && isGenerating) {
+                  e.preventDefault()
+                  handleStop()
+                } else if (e.key === 'Enter' && !e.shiftKey) {
                   e.preventDefault()
                   handleSend()
                 }

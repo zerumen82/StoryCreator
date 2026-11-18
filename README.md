@@ -10,8 +10,9 @@ Generador de historias interactivo con IA local (Ollama) o cloud (OpenAI/Groq).
 - **Caption Studio**: Analiza fotos con IA de visión y genera captions creativos
 - **Generación de imágenes**: Compose imágenes con Stable Diffusion local (ComfyUI)
 - **Relaciones**: Define parentesco y afinidad entre personajes
-- **Memoria**: La IA aprende de tus preferencias y.feedback
+- **Memoria**: La IA aprende de tus preferencias y feedback
 - **Exportar PDF**: Guarda tus historias y conversaciones
+- **Persistencia**: Almacenamiento local en el navegador/Electron (localStorage)
 
 ## Requisitos
 
@@ -47,6 +48,6 @@ El instalador se genera en `release/`.
 - React + TypeScript
 - Electron
 - Zustand (estado)
-- SQLite (persistencia)
+- localStorage (persistencia)
 - Tailwind CSS
 - Ollama / OpenAI API

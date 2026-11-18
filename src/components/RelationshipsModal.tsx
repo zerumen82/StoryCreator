@@ -2,6 +2,16 @@ import { useState, useEffect } from 'react'
 import { useRelationshipStore } from '../store/relationshipStore'
 import { useCharacterStore } from '../store/characterStore'
 
+const SUBTYPE_LABELS: Record<string, string> = {
+  padre_hijo: 'Padre → Hijo', madre_hijo: 'Madre → Hijo', hijo_padre: 'Hijo → Padre', hijo_madre: 'Hijo → Madre',
+  abuelo_nieto: 'Abuelo → Nieto', nieto_abuelo: 'Nieto → Abuelo', tio_sobrino: 'Tío → Sobrino', sobrino_tio: 'Sobrino → Tío',
+  primo_primo: 'Primo ↔ Primo', esposo_esposa: 'Esposo ↔ Esposa', novios: 'Novios', ex_conexion: 'Ex relación',
+  tutor_menor: 'Tutor → Menor', menor_tutor: 'Menor → Tutor',
+  amigo_primo: 'Amigo (primo)', amigo_cercano: 'Amigo cercano', amor_rival: 'Amor/rival', rival_amor: 'Rival/amor',
+  enemigo: 'Enemigo', competidor: 'Competidor', aliado: 'Aliado', mentor_alumno: 'Mentor → Alumno',
+  alumno_mentor: 'Alumno → Mentor', compania_profesional: 'Compañía profesional', rival_competidor: 'Rival/competidor',
+  guerra_civil: 'Guerra civil', unidos_poder: 'Unidos por poder',
+}
 const FAMILY_TYPES = [
   'padre_hijo','madre_hijo','hijo_padre','hijo_madre',
   'abuelo_nieto','nieto_abuelo','tio_sobrino','sobrino_tio',
@@ -39,6 +49,14 @@ export default function RelationshipsModal({ characterId, open, onClose }: Props
 
   useEffect(() => { if (open) { setSubtype(''); setNotice(null) } }, [open, type])
 
+  // Cerrar con ESC
+  useEffect(() => {
+    if (!open) return
+    const handleEsc = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    document.addEventListener('keydown', handleEsc)
+    return () => document.removeEventListener('keydown', handleEsc)
+  }, [open, onClose])
+
   // La contraparte: si la relacion se creo desde el otro lado, characterId2 puede ser yo
   const otherPartyId = (r: { characterId1: string; characterId2: string }) =>
     r.characterId1 === characterId ? r.characterId2 : r.characterId1
@@ -57,7 +75,7 @@ export default function RelationshipsModal({ characterId, open, onClose }: Props
   }
   if (!open) return null
   return (
-    <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4" onClick={onClose} role="dialog" aria-modal="true">
       <div className="bg-gray-900 border border-gray-700 rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto shadow-2xl shadow-violet-900/20 p-6 space-y-6" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold text-white">
@@ -71,7 +89,7 @@ export default function RelationshipsModal({ characterId, open, onClose }: Props
         </div>
         <select value={subtype} onChange={e => setSubtype(e.target.value)} className="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm">
           <option value="">Seleccionar...</option>
-          {(type === 'parentesco' ? FAMILY_TYPES : AFFINITY_TYPES).map(t => <option key={t} value={t}>{t.replace(/_/g,' ')}</option>)}
+          {(type === 'parentesco' ? FAMILY_TYPES : AFFINITY_TYPES).map(t => <option key={t} value={t}>{SUBTYPE_LABELS[t] || t.replace(/_/g,' ')}</option>)}
         </select>
         <select value={otherId} onChange={e => setOtherId(e.target.value)} className="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm">
           <option value="">Seleccionar personaje...</option>
@@ -99,7 +117,7 @@ export default function RelationshipsModal({ characterId, open, onClose }: Props
                       <span className={`inline-block px-1.5 py-0.5 rounded text-[11px] mr-2 ${r.type === 'parentesco' ? 'bg-purple-900/50 text-purple-300' : 'bg-blue-900/50 text-blue-300'}`}>
                         {r.type}
                       </span>
-                      {String(r.subtype).replace(/_/g, ' ')} · <strong>{other?.name || '?'}</strong>
+                      {SUBTYPE_LABELS[r.subtype] || String(r.subtype).replace(/_/g, ' ')} · <strong>{other?.name || '?'}</strong>
                       <span className="text-gray-500 text-xs"> (fuerza {r.strength})</span>
                     </span>
                     <button onClick={() => handleDelete(r.id)} className="text-xs text-red-400 hover:text-red-300 shrink-0">Eliminar</button>

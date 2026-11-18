@@ -74,7 +74,7 @@ export const useConversationStore = create<ConversationState>((set, get) => ({
     const { currentConversationId } = get()
     if (!currentConversationId) return ''
     const id = db.addMessage(currentConversationId, role, content)
-    const message: ChatMessage = { id, role, content, timestamp: Date.now() }
+    const message: ChatMessage = { id, role, content, timestamp: Date.now(), feedback: 0 }
     set((state) => ({ messages: [...state.messages, message] }))
 
     // Registrar en memoria para aprendizaje (solo mensajes de usuario e IA)
@@ -101,5 +101,8 @@ export const useConversationStore = create<ConversationState>((set, get) => ({
 
   setFeedback: (messageId, feedback) => {
     db.setMessageFeedback(messageId, feedback)
+    set((state) => ({
+      messages: state.messages.map((m) => (m.id === messageId ? { ...m, feedback } : m)),
+    }))
   }
 }))

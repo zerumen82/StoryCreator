@@ -16,6 +16,7 @@ export default function LocationsPanel() {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [form, setForm] = useState(emptyLocation)
   const [modalOpen, setModalOpen] = useState(false)
+  const [search, setSearch] = useState('')
 
   const openCreate = () => {
     setEditingId(null)
@@ -55,8 +56,15 @@ export default function LocationsPanel() {
           </button>
         </div>
 
+        <input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Buscar localización por nombre..."
+          className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-sm focus:outline-none focus:border-indigo-500"
+        />
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {locations.map((loc) => (
+          {locations.filter((l) => !search.trim() || l.name.toLowerCase().includes(search.trim().toLowerCase())).map((loc) => (
             <div key={loc.id} className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden space-y-3 group">
               {loc.image && <img src={loc.image} alt={loc.name} className="w-full h-40 object-cover" />}
               <div className="p-4 space-y-2">
@@ -67,7 +75,7 @@ export default function LocationsPanel() {
                   </div>
                   <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button onClick={() => openEdit(loc)} className="px-2 py-1 bg-gray-800 hover:bg-gray-700 rounded text-xs">Editar</button>
-                    <button onClick={() => deleteLocation(loc.id)} className="px-2 py-1 bg-red-900/40 hover:bg-red-900/60 text-red-300 rounded text-xs">Borrar</button>
+                    <button onClick={() => { if (window.confirm('¿Borrar esta localización?')) deleteLocation(loc.id) }} className="px-2 py-1 bg-red-900/40 hover:bg-red-900/60 text-red-300 rounded text-xs">Borrar</button>
                   </div>
                 </div>
                 <p className="text-sm text-gray-400 line-clamp-2">{loc.description}</p>
